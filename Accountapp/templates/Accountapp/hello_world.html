@@ -2,19 +2,26 @@
 
 {% block content %}
 
-    <div style="height: 20rem; background-color: #38df81; border-radius: 1rem; margin: 2rem">
-        <h1>
-            testing
+    <div style="border-radius: 1rem; margin: 2rem; text-align: center">
+        <h1 style="font_family: 'Lobster', cursive">
+            Hello World List!
         </h1>
 
         <form action="/account/hello_world/" method="post">
             {% csrf_token %} <!--장고에서 제공하는 보안기능-->
-            <input type="submit" class="btn-primary" value="POST"> <!--btn-primary는 부트스트랩 내에 적혀 있음-->
+            <div>
+                <input type="text" name="hello_world_input">
+            </div>
+            <div>
+                <input type="submit" class="btn-primary" value="POST"> <!--btn-primary는 부트스트랩 내에 적혀 있음-->
+            </div>
         </form>
 
+        {% if hello_world_output %}
         <h1>
-            {{ text }}
+            {{ hello_world_output.text }}
         </h1>
+        {% endif %}
     </div>
 
 {% endblock %}

@@ -5,4 +5,4 @@ from django.shortcuts import render
 
 def hello_world(request):
     #return HttpResponse('Hello world!')  # HttpResponse는 views에서 직접적으로 response해주는 것.
-    return render(request, 'base.html')
+    return render(request, 'Accountapp/hello_world.html')

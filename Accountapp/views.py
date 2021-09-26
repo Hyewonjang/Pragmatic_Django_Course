@@ -1,9 +1,11 @@
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView
 
 from Accountapp.models import HelloWorld
 
@@ -26,3 +28,10 @@ def hello_world(request):
     else:
         hello_world_list = HelloWorld.objects.all()
         return render(request, 'Accountapp/hello_world.html', context={'hello_world_list': hello_world_list})
+
+# 함수형 뷰로 표현한다면 더 길어졌을 것임.
+class AccountCreateView(CreateView):
+    model = User    # 장고에서 기본으로 제공해주는 model인 User 사용
+    form_class = UserCreationForm   # 장고에서 기본적으로 제공해주는 Form - 패스퉈드 1,2 입력 및 확인/검증작업
+    success_url = reverse_lazy('Accountapp:hello_world')    # reverse_lazy는 클래스형 뷰에서 사용하고, reverse는 함수형 뷰에서 사용 / 그리고 다음 코드는 성공시 돌아갈 페이지 url을 설정하는 것임.
+    template_name = 'Accountapp/create.html'    # 회원가입을 할 때 보일 html 비주얼

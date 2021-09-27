@@ -5,11 +5,20 @@
   <div>
     <div style="text-align: center; max-width: 500px; margin: 4rem auto;">
       <p>
-        {{ target_user.date_joined }}
+        {{ target_user.date_joined }} <!--user가 아닌 target_user인 이유는 views.py의 AccountDetailView의 context_object_name 주석 참고-->
       </p>
       <h2 style="font-family : 'NanumSquareB'">
         {{ target_user.username }}
       </h2>
+
+      {% if target_user == user %} <!--target_user라는 이 페이지 주인의 user object가 지금 접속한 user와 같을 때-->
+      <a href="{% url 'Accountapp:update' pk=user.pk %}">
+        <p>
+          Change Info
+        </p>
+      </a>
+      {% endif %}
+
     </div>
   </div>
 

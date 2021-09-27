@@ -9,11 +9,14 @@
             <span>nav3</span>
             {% if not user.is_authenticated %}
             <a href="{% url 'Accountapp:login' %}?next={{ request.path }}">  <!--원래 있던 페이지를 next에 넘겨줘서 login하고 원래 페이지로 다시 돌아올 수 있다.-->
-            <span>Login</span>
+                <span>Login</span>
             </a>
             {% else %}
+            <a href="{% url 'Accountapp:detail' pk=user.pk %}">
+                <span>Mypage</span>
+            </a>
             <a href="{% url 'Accountapp:logout' %}">
-            <span>Logout</span>
+                <span>Logout</span>
             </a>
             {% endif %}
         </div>

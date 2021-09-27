@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from Accountapp.forms import AccountUpdateForm
 from Accountapp.models import HelloWorld
@@ -47,3 +47,8 @@ class AccountUpdateView(UpdateView):
     form_class = AccountUpdateForm  # Create할 때와 내용 비슷하기 때문
     success_url = reverse_lazy('Accountapp:hello_world')    # reverse_lazy는 클래스형 뷰에서 사용하고, reverse는 함수형 뷰에서 사용 / 그리고 다음 코드는 성공시 돌아갈 페이지 url을 설정하는 것임.
     template_name = 'Accountapp/update.html'
+
+class AccountDeleteView(DeleteView):
+    model = User
+    success_url = reverse_lazy('Accountapp:login')
+    template_name = 'Accountapp/delete.html'

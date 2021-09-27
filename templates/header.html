@@ -11,6 +11,9 @@
             <a href="{% url 'Accountapp:login' %}?next={{ request.path }}">  <!--원래 있던 페이지를 next에 넘겨줘서 login하고 원래 페이지로 다시 돌아올 수 있다.-->
                 <span>Login</span>
             </a>
+            <a href="{% url 'Accountapp:create' %}">
+                <span>Signup</span>
+            </a>
             {% else %}
             <a href="{% url 'Accountapp:detail' pk=user.pk %}">
                 <span>Mypage</span>

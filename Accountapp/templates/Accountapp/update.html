@@ -7,7 +7,7 @@
         <div class="mb-4"> <!--mb-4는 margin-bottom을 4배해준다.-->
             <h4>Change Info</h4>
         </div>
-        <form action="{% url 'Accountapp:update' pk=user.pk %}" method="post">
+        <form action="{% url 'Accountapp:update' pk=targetuser.pk %}" method="post">
             {% csrf_token %}
             <!--{{ form }}--> <!-- AccountCreateView에서 설정한 form이 나온다.-->
             {% bootstrap_form form %}

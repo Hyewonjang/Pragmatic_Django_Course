@@ -13,22 +13,25 @@ from Accountapp.models import HelloWorld
 
 def hello_world(request):
     #return HttpResponse('Hello world!')  # HttpResponse는 views에서 직접적으로 response해주는 것.
+    if request.user.authenticated: # authenticated : 로그인 여부 파악
 
-    if request.method == "POST":
+        if request.method == "POST":
 
-        temp = request.POST.get('hello_world_input')
+            temp = request.POST.get('hello_world_input')
 
-        new_hello_world = HelloWorld()  # 새로운 HelloWorld 객체 생성
-        new_hello_world.text = temp    # 새로운 HelloWorld 객체의 text 속성 작성
-        new_hello_world.save()    # 새로운 HelloWorld 객체 DB에 저장
+            new_hello_world = HelloWorld()  # 새로운 HelloWorld 객체 생성
+            new_hello_world.text = temp    # 새로운 HelloWorld 객체의 text 속성 작성
+            new_hello_world.save()    # 새로운 HelloWorld 객체 DB에 저장
 
-        #hello_world_list = HelloWorld.objects.all()
-        #return render(request, 'Accountapp/hello_world.html', context={'hello_world_list': hello_world_list})
-        # f5키 눌러도 POST한 결과가 중복되어 나타나지 않도록 하기 위함. 아래 redirect를 통해서 request.method는 post가 아닌 get인 상황으로 재연결된다.
-        return HttpResponseRedirect(reverse('Accountapp:hello_world'))
+            #hello_world_list = HelloWorld.objects.all()
+            #return render(request, 'Accountapp/hello_world.html', context={'hello_world_list': hello_world_list})
+            # f5키 눌러도 POST한 결과가 중복되어 나타나지 않도록 하기 위함. 아래 redirect를 통해서 request.method는 post가 아닌 get인 상황으로 재연결된다.
+            return HttpResponseRedirect(reverse('Accountapp:hello_world'))
+        else:
+            hello_world_list = HelloWorld.objects.all()
+            return render(request, 'Accountapp/hello_world.html', context={'hello_world_list': hello_world_list})
     else:
-        hello_world_list = HelloWorld.objects.all()
-        return render(request, 'Accountapp/hello_world.html', context={'hello_world_list': hello_world_list})
+        return HttpResponseRedirect(reverse('Accountapp:login'))
 
 # 함수형 뷰로 표현한다면 더 길어졌을 것임.
 class AccountCreateView(CreateView):
@@ -49,8 +52,32 @@ class AccountUpdateView(UpdateView):
     success_url = reverse_lazy('Accountapp:hello_world')    # reverse_lazy는 클래스형 뷰에서 사용하고, reverse는 함수형 뷰에서 사용 / 그리고 다음 코드는 성공시 돌아갈 페이지 url을 설정하는 것임.
     template_name = 'Accountapp/update.html'
 
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated and self.get_object() == self.request.user:
+            return super().get(*args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('Accountapp:login'))
+
+    def post(self, *args, **kwargs):
+        if self.request.user.is_authenticated and self.get_object() == self.request.user:
+            return super().get(*args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('Accountapp:login'))
+            
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
     success_url = reverse_lazy('Accountapp:login')
     template_name = 'Accountapp/delete.html'
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated and self.get_object() == self.request.user:
+            return super().get(*args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('Accountapp:login'))
+
+    def post(self, *args, **kwargs):
+        if self.request.user.is_authenticated and self.get_object() == self.request.user:
+            return super().get(*args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('Accountapp:login'))

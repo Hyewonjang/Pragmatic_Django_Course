@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
-
 # 출처 : https://django-environ.readthedocs.io/en/latest/  (SECRET_KEY 보안을 위한 다른 페이지 관리 목적)
-import os, environ
+import os
+from pathlib import Path
 
 from django.urls import reverse_lazy
 
-env = environ.Env(
+env = os.environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
 )
@@ -26,7 +25,7 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # reading .env file (SECRET_KEY 보안을 위한 다른 페이지 관리 목적)
-environ.Env.read_env(
+os.environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )
 

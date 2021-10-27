@@ -1,20 +1,20 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import render
-
 # Create your views here.
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from Accountapp.forms import AccountUpdateForm
 from Accountapp.models import HelloWorld
 
 
+@login_required
 def hello_world(request):
     #return HttpResponse('Hello world!')  # HttpResponse는 views에서 직접적으로 response해주는 것.
-    if request.user.authenticated: # authenticated : 로그인 여부 파악
-
         if request.method == "POST":
 
             temp = request.POST.get('hello_world_input')
@@ -30,8 +30,6 @@ def hello_world(request):
         else:
             hello_world_list = HelloWorld.objects.all()
             return render(request, 'Accountapp/hello_world.html', context={'hello_world_list': hello_world_list})
-    else:
-        return HttpResponseRedirect(reverse('Accountapp:login'))
 
 # 함수형 뷰로 표현한다면 더 길어졌을 것임.
 class AccountCreateView(CreateView):
@@ -56,13 +54,13 @@ class AccountUpdateView(UpdateView):
         if self.request.user.is_authenticated and self.get_object() == self.request.user:
             return super().get(*args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse('Accountapp:login'))
+            return HttpResponseForbidden()
 
     def post(self, *args, **kwargs):
         if self.request.user.is_authenticated and self.get_object() == self.request.user:
             return super().get(*args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse('Accountapp:login'))
+            return HttpResponseForbidden()
             
 class AccountDeleteView(DeleteView):
     model = User
@@ -74,10 +72,10 @@ class AccountDeleteView(DeleteView):
         if self.request.user.is_authenticated and self.get_object() == self.request.user:
             return super().get(*args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse('Accountapp:login'))
+            return HttpResponseForbidden()
 
     def post(self, *args, **kwargs):
         if self.request.user.is_authenticated and self.get_object() == self.request.user:
             return super().get(*args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse('Accountapp:login'))
+            return HttpResponseForbidden()

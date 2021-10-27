@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,9 +11,11 @@ from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from Accountapp.forms import AccountUpdateForm
 from Accountapp.models import HelloWorld
+from pragmatic.Accountapp.decorators import account_ownership_required
 
+has_ownership = [account_ownership_required, login_required]
 
-@login_required
+@login_required  # 로그인했는지 안했는지 구분하고 안 했으면 로그인 페이지로 리턴해주는 구문 역할 해줌.
 def hello_world(request):
     #return HttpResponse('Hello world!')  # HttpResponse는 views에서 직접적으로 response해주는 것.
         if request.method == "POST":
@@ -43,6 +46,8 @@ class AccountDetailView(DetailView):
     context_object_name = 'target_user' # detail.html에서 user정보 보여줄 때 user라고 쓰면 다른 사람이 해당 사이트를 사용할 때 보여주는 정보가 해당 유저의 정보가 아니라 내 정보일 가능성이 있기 떄문에 다음과 같이 대상 유저를 가리키는 명칭을 target_user 등으로 바꿔준다. 바꾸면 앞의 우려를 예방할 수 있다. / (content_object_name을 따로 정의하지 않고 계속 [detail.html 등에서] user로 쓸 경우, 로그인한 사람의 pk가 아니라 로그인한 다른 사람의 pk로 detail.html 페이지에 접속했을 때 보려고 친 pk에 해당하는 유저의 정보가 아니라 로그인한 유저의 정보가 나올 가능성이 있기 때문)
     template_name = 'Accountapp/detail.html'
 
+@method_decorator(has_ownership, 'get') # 일반함수에 사용하는 decorator를 메서드에 사용할 수 있도록 해주는 decorator
+@method_decorator(has_ownership, 'post')
 class AccountUpdateView(UpdateView):
     model = User
     context_object_name = 'target_user'
@@ -50,6 +55,8 @@ class AccountUpdateView(UpdateView):
     success_url = reverse_lazy('Accountapp:hello_world')    # reverse_lazy는 클래스형 뷰에서 사용하고, reverse는 함수형 뷰에서 사용 / 그리고 다음 코드는 성공시 돌아갈 페이지 url을 설정하는 것임.
     template_name = 'Accountapp/update.html'
 
+    # class 안의 함수에 decorator 적용 방식은 class 밖의 함수와 다름
+    """
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated and self.get_object() == self.request.user:
             return super().get(*args, **kwargs)
@@ -61,21 +68,23 @@ class AccountUpdateView(UpdateView):
             return super().get(*args, **kwargs)
         else:
             return HttpResponseForbidden()
-            
+     """ 
+@method_decorator(has_ownership, 'get') # 일반함수에 사용하는 decorator를 메서드에 사용할 수 있도록 해주는 decorator
+@method_decorator(has_ownership, 'post') 
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
     success_url = reverse_lazy('Accountapp:login')
     template_name = 'Accountapp/delete.html'
 
-    def get(self, *args, **kwargs):
-        if self.request.user.is_authenticated and self.get_object() == self.request.user:
-            return super().get(*args, **kwargs)
-        else:
-            return HttpResponseForbidden()
+    # def get(self, *args, **kwargs):
+    #     if self.request.user.is_authenticated and self.get_object() == self.request.user:
+    #         return super().get(*args, **kwargs)
+    #     else:
+    #         return HttpResponseForbidden()
 
-    def post(self, *args, **kwargs):
-        if self.request.user.is_authenticated and self.get_object() == self.request.user:
-            return super().get(*args, **kwargs)
-        else:
-            return HttpResponseForbidden()
+    # def post(self, *args, **kwargs):
+    #     if self.request.user.is_authenticated and self.get_object() == self.request.user:
+    #         return super().get(*args, **kwargs)
+    #     else:
+    #         return HttpResponseForbidden()

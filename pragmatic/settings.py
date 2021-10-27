@@ -148,3 +148,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = reverse_lazy('Accountapp:hello_world')
 LOGOUT_REDIRECT_URL = reverse_lazy('Accountapp:login')
+
+
+MEDIA_URL = '/media/' # 주소창에 media이하의 경로로 접근해야지 실제 미디어 파일의 접근이 가능하다. 
+# 127.0.0.1:8000/media/test.jpg : 하면 test.jpg 파일 볼 수 있음.
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # media 파일을 서버에 올렸을 때 어느 경로에 지정이 될 것인지, 그 바닥에 있는 경로가 어디가 될 것인지
+# 미디어 파일을 올리면 pragmatic 디렉토리에 media 디렉토리가 새로 생겨 그곳에 올린 파일이 모두 올라가게 됨.

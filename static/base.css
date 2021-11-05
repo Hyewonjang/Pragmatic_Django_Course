@@ -1,17 +1,17 @@
-.pragmatic_logo{
+.to_do_list_logo{
     font-family: 'Lobster', cursive;
 }
 
-.pragmatic_footer_button{
+.to_do_list_footer_button{
     font-size: .9rem;
 }
 
-.pragmatic_footer{
+.to_do_list_footer{
     text-align: center;
     margin-top: 2rem;
 }
 
-.pragmatic_header{
+.to_do_list_header{
     text-align: center;
-    margin: 2rem 0;
+    margin: 0.5rem 0;
 }
